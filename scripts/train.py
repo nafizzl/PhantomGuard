@@ -4,19 +4,9 @@ import urllib.request
 import urllib.error
 import time
 import random
+from dotenv import load_dotenv
 
-# Helper to read .env file manually if python-dotenv is not installed
-def load_env():
-    env_path = "c:/Users/19295/Agent Trust Firewall/.env"
-    if os.path.exists(env_path):
-        with open(env_path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    key, val = line.split("=", 1)
-                    os.environ[key.strip()] = val.strip()
-
-load_env()
+load_dotenv()
 
 API_KEY = os.getenv("FIREWORKS_API_KEY")
 if not API_KEY:
@@ -85,17 +75,24 @@ def get_account_id():
 def upload_dataset(account_id, file_path, dataset_id):
     print(f"Checking/Registering dataset placeholder '{dataset_id}'...")
     
+    # Count examples in file
+    example_count = 0
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            example_count = sum(1 for line in f if line.strip())
+            
     # Try to register dataset
     payload = {
         "datasetId": dataset_id,
         "dataset": {
-            "userUploaded": {}
+            "userUploaded": {},
+            "exampleCount": example_count
         }
     }
     
     # If it already exists, registering might throw an error, so we catch it
     try:
-        api_request("POST", "datasets", payload=payload)
+        api_request("POST", f"accounts/{account_id}/datasets", payload=payload)
         print(f"  Registered dataset placeholder: {dataset_id}")
     except urllib.error.HTTPError as e:
         # 409 Conflict means it already exists, which is fine
@@ -118,8 +115,14 @@ def upload_dataset(account_id, file_path, dataset_id):
     }
     
     upload_path = f"accounts/{account_id}/datasets/{dataset_id}:upload"
-    api_request("POST", upload_path, payload=body, headers=headers)
-    print(f"  Successfully uploaded {file_path} to dataset {dataset_id}")
+    try:
+        api_request("POST", upload_path, payload=body, headers=headers)
+        print(f"  Successfully uploaded {file_path} to dataset {dataset_id}")
+    except urllib.error.HTTPError as e:
+        if e.code == 400:
+            print(f"  Dataset file for '{dataset_id}' already uploaded. Proceeding...")
+        else:
+            raise e
 
 def trigger_fine_tune(account_id, train_id, val_id):
     # Unique job suffix
@@ -127,17 +130,12 @@ def trigger_fine_tune(account_id, train_id, val_id):
     job_id = f"phantomguard-ft-{job_suffix}"
     
     payload = {
-        "supervisedFineTuningJob": {
-            "name": f"accounts/{account_id}/supervisedFineTuningJobs/{job_id}",
-            "dataset": f"accounts/{account_id}/datasets/{train_id}",
-            "validationDataset": f"accounts/{account_id}/datasets/{val_id}",
-            "model": "accounts/fireworks/models/gemma-4-26b-a4b-it",
-            "hyperparameters": {
-                "learningRate": 0.0001,
-                "epochs": 3,
-                "loraRank": 8
-            }
-        }
+        "name": f"accounts/{account_id}/supervisedFineTuningJobs/{job_id}",
+        "dataset": f"accounts/{account_id}/datasets/{train_id}",
+        "baseModel": "accounts/fireworks/models/gemma-4-26b-a4b-it",
+        "epochs": 3,
+        "learningRate": 0.0001,
+        "loraRank": 8
     }
     
     print(f"Triggering Supervised Fine-Tuning Job '{job_id}'...")
@@ -173,12 +171,12 @@ def monitor_job(account_id, job_id):
 def main():
     account_id = get_account_id()
     
-    train_dataset_id = "phantomguard_train_set"
-    val_dataset_id = "phantomguard_val_set"
+    train_dataset_id = "phantomguard-train-set"
+    val_dataset_id = "phantomguard-val-set"
     
     # Upload datasets
-    upload_dataset(account_id, "c:/Users/19295/Agent Trust Firewall/data/train.jsonl", train_dataset_id)
-    upload_dataset(account_id, "c:/Users/19295/Agent Trust Firewall/data/val.jsonl", val_dataset_id)
+    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/data/train.jsonl", train_dataset_id)
+    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/data/val.jsonl", val_dataset_id)
     
     # Trigger Job
     job_id = trigger_fine_tune(account_id, train_dataset_id, val_dataset_id)
