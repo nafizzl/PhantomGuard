@@ -1,1 +1,9 @@
-.env
+demo_app/.env
+phantomguard_package/dist/
+phantomguard_package/*.egg-info/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
+.DS_Store
+*.pid

@@ -175,8 +175,8 @@ def main():
     val_dataset_id = "phantomguard-val-set"
     
     # Upload datasets
-    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/data/train.jsonl", train_dataset_id)
-    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/data/val.jsonl", val_dataset_id)
+    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/demo_app/data/train.jsonl", train_dataset_id)
+    upload_dataset(account_id, "c:/Users/19295/PhantomGuard/demo_app/data/val.jsonl", val_dataset_id)
     
     # Trigger Job
     job_id = trigger_fine_tune(account_id, train_dataset_id, val_dataset_id)

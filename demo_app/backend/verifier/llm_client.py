@@ -69,7 +69,7 @@ def query_llm(action_type: str, target: str, context: str) -> dict:
         "response_format": {"type": "json_object"}
     }
 
-    url = "https://api.fireworks.ai/v1/chat/completions"
+    url = "https://api.fireworks.ai/inference/v1/chat/completions"
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),

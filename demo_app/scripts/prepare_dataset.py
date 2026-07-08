@@ -390,16 +390,16 @@ def generate_dataset():
     val_data = dataset[split_idx:]
     
     # Ensure directories exist
-    os.makedirs("c:/Users/19295/PhantomGuard/data", exist_ok=True)
+    os.makedirs("c:/Users/19295/PhantomGuard/demo_app/data", exist_ok=True)
     
     # Write training dataset
-    train_path = "c:/Users/19295/PhantomGuard/data/train.jsonl"
+    train_path = "c:/Users/19295/PhantomGuard/demo_app/data/train.jsonl"
     with open(train_path, "w", encoding="utf-8") as f:
         for item in train_data:
             f.write(json.dumps(item) + "\n")
             
     # Write validation dataset
-    val_path = "c:/Users/19295/PhantomGuard/data/val.jsonl"
+    val_path = "c:/Users/19295/PhantomGuard/demo_app/data/val.jsonl"
     with open(val_path, "w", encoding="utf-8") as f:
         for item in val_data:
             f.write(json.dumps(item) + "\n")
