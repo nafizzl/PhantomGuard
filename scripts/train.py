@@ -131,7 +131,7 @@ def trigger_fine_tune(account_id, train_id, val_id):
             "name": f"accounts/{account_id}/supervisedFineTuningJobs/{job_id}",
             "dataset": f"accounts/{account_id}/datasets/{train_id}",
             "validationDataset": f"accounts/{account_id}/datasets/{val_id}",
-            "model": "accounts/fireworks/models/llama-v3-8b-instruct",
+            "model": "accounts/fireworks/models/gemma-4-26b-a4b-it",
             "hyperparameters": {
                 "learningRate": 0.0001,
                 "epochs": 3,
