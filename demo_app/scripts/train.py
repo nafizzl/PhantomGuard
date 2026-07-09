@@ -4,9 +4,9 @@ import urllib.request
 import urllib.error
 import time
 import random
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 API_KEY = os.getenv("FIREWORKS_API_KEY")
 if not API_KEY:

@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-# Load .env file from root
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"), override=True)
+# Load .env file from workspace root using find_dotenv
+from dotenv import find_dotenv
+load_dotenv(find_dotenv(), override=True)
 
 FIREWORKS_API_KEY = os.getenv("FIREWORKS_API_KEY")
 # Our custom fine-tuned Gemma 4 model adapter

@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-# Load env variables from current directory
+# Load env variables from project root using find_dotenv
 from dotenv import load_dotenv, find_dotenv
-dotenv_file = find_dotenv(usecwd=True)
+dotenv_file = find_dotenv(usecwd=False)
 load_status = load_dotenv(dotenv_file, override=True)
 
 FIREWORKS_API_KEY = os.getenv("FIREWORKS_API_KEY")

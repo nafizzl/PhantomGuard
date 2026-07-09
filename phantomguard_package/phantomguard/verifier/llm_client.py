@@ -55,7 +55,7 @@ def query_llm(action_type: str, target: str, context: str) -> dict:
         "model": model,
         "messages": messages,
         "temperature": 0.1,
-        "max_tokens": 150,
+        "max_tokens": 500,
         "response_format": {"type": "json_object"}
     }
 
@@ -74,7 +74,16 @@ def query_llm(action_type: str, target: str, context: str) -> dict:
         with urllib.request.urlopen(req, timeout=10) as response:
             res_body = json.loads(response.read().decode("utf-8"))
             content_str = res_body["choices"][0]["message"]["content"]
-            result = json.loads(content_str)
+            
+            # Robust JSON extraction
+            start_idx = content_str.find('{')
+            end_idx = content_str.rfind('}')
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = content_str[start_idx:end_idx+1]
+            else:
+                json_str = content_str
+                
+            result = json.loads(json_str)
             return {
                 "is_hallucination": bool(result.get("is_hallucination", False)),
                 "confidence": float(result.get("confidence", 0.9)),
@@ -93,3 +102,4 @@ def query_llm(action_type: str, target: str, context: str) -> dict:
             "confidence": 0.5,
             "reason": f"Fallback due to connection failure: {e}"
         }
+
