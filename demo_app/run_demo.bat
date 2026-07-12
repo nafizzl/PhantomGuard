@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo   🛡️ PHANTOMGUARD DEMO LAUNCHER
+echo   PHANTOMGUARD DEMO LAUNCHER
 echo ===================================================
 echo Installing dependencies from requirements.txt...
 pip install -r requirements.txt

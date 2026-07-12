@@ -11,10 +11,9 @@ AMD_NOTEBOOK_URL = os.getenv("AMD_NOTEBOOK_URL")
 
 print(f"[Debug Config] find_dotenv found: {repr(dotenv_file)}")
 print(f"[Debug Config] load_status return: {load_status}")
-print(f"[Debug Config] config.FIREWORKS_API_KEY evaluated to: {repr(FIREWORKS_API_KEY)}")
 
 # Our default trained model adapter path
-DEFAULT_SFT_MODEL = "accounts/nafizzl/models/ft-w4dd2z1a-xxn0j"
+DEFAULT_SFT_MODEL = "accounts/nafizzl/models/ft-w4dd2z1a-xxn0j#accounts/nafizzl/deployments/o8i5az0k"
 # Standard base model fallback
 DEFAULT_BASE_MODEL = "accounts/fireworks/models/deepseek-v4-pro"
 
@@ -22,8 +21,8 @@ DEFAULT_BASE_MODEL = "accounts/fireworks/models/deepseek-v4-pro"
 FINE_TUNED_MODEL = os.getenv("PHANTOMGUARD_MODEL", DEFAULT_SFT_MODEL)
 BASE_MODEL = DEFAULT_BASE_MODEL
 
-# Control configuration flags
-USE_FINE_TUNED = True
+# Control configuration flags (can be set via environment variable PHANTOMGUARD_USE_SFT)
+USE_FINE_TUNED = os.getenv("PHANTOMGUARD_USE_SFT", "True").lower() in ("true", "1", "yes")
 
 # Daemon and Proxy network settings
 DAEMON_HOST = "127.0.0.1"

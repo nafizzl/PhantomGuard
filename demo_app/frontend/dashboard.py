@@ -55,7 +55,7 @@ st.markdown("""
         100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 </style>
-""", unsafe_type="html")
+""", unsafe_allow_html=True)
 
 BACKEND_URL = "http://127.0.0.1:8000"
 

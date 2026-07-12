@@ -21,6 +21,23 @@ def verify_url(url: str, context: str = "") -> dict:
             "reason": f"Malformed URL parsing failed: {e}"
         }
 
+    # Whitelist check to avoid self-intercept deadlocks
+    whitelisted_domains = [
+        "api.fireworks.ai", 
+        "api.anthropic.com", 
+        "api.openai.com", 
+        "generativelanguage.googleapis.com", 
+        "localhost", 
+        "127.0.0.1"
+    ]
+    if any(domain == w or domain.endswith("." + w) for w in whitelisted_domains):
+        return {
+            "is_hallucination": False,
+            "confidence": 1.0,
+            "category": "none",
+            "reason": "Whitelisted infrastructure domain."
+        }
+
     # 1. Active DNS Verification
     dns_resolved = True
     try:

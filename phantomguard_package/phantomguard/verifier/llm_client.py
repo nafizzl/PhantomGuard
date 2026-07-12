@@ -31,7 +31,6 @@ def query_llm(action_type: str, target: str, context: str) -> dict:
     Queries Fireworks AI to classify if an action is a hallucination or threat.
     """
     api_key = config.FIREWORKS_API_KEY
-    print(f"[Debug LLM Client] config.FIREWORKS_API_KEY evaluates to: {repr(api_key)}")
     if not api_key:
         print("[LLM Warning] FIREWORKS_API_KEY not set. Returning offline fallback.")
         return {"is_hallucination": False, "confidence": 0.5, "reason": "Offline Mode: FIREWORKS_API_KEY not configured."}
